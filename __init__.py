@@ -143,8 +143,20 @@ class RegSkill(MycroftSkill):
         print(listp)
         #extraire l'email des invitees et de la salle
         attendee = []
-        namerooms = ['midoune room','aiguilles room','barrouta room','kantaoui room','gorges room','ichkeul room','khemir room','tamaghza room','friguia room','ksour room','medeina room','thyna room']
-        emailrooms = ["focus-corporation.com_3436373433373035363932@resource.calendar.google.com","focus-corporation.com_3132323634363237333835@resource.calendar.google.com","focus-corporation.com_3335353934333838383834@resource.calendar.google.com","focus-corporation.com_3335343331353831343533@resource.calendar.google.com","focus-corporation.com_3436383331343336343130@resource.calendar.google.com","focus-corporation.com_36323631393136363531@resource.calendar.google.com","focus-corporation.com_3935343631343936373336@resource.calendar.google.com","focus-corporation.com_3739333735323735393039@resource.calendar.google.com","focus-corporation.com_3132343934363632383933@resource.calendar.google.com","focus-corporation.com_@resource.calendar.google.com","focus-corporation.com_@resource.calendar.google.com","focus-corporation.com_@resource.calendar.google.com"]
+        namerooms = ['midoune room', 'aiguilles room', 'barrouta room', 'kantaoui room', 'gorges room', 'ichkeul room',
+                     'khemir room', 'tamaghza room', 'friguia room', 'ksour room', 'medeina room', 'thyna room']
+        emailrooms = ["focus-corporation.com_3436373433373035363932@resource.calendar.google.com",
+                      "focus-corporation.com_3132323634363237333835@resource.calendar.google.com",
+                      "focus-corporation.com_3335353934333838383834@resource.calendar.google.com",
+                      "focus-corporation.com_3335343331353831343533@resource.calendar.google.com",
+                      "focus-corporation.com_3436383331343336343130@resource.calendar.google.com",
+                      "focus-corporation.com_36323631393136363531@resource.calendar.google.com",
+                      "focus-corporation.com_3935343631343936373336@resource.calendar.google.com",
+                      "focus-corporation.com_3739333735323735393039@resource.calendar.google.com",
+                      "focus-corporation.com_3132343934363632383933@resource.calendar.google.com",
+                      "focus-corporation.com_@resource.calendar.google.com",
+                      "focus-corporation.com_@resource.calendar.google.com",
+                      "focus-corporation.com_@resource.calendar.google.com"]
         indiceroom =None
         for j, e in enumerate(namerooms):
             if e == location:
