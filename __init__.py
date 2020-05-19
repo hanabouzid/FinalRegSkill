@@ -130,6 +130,8 @@ class RegSkill(MycroftSkill):
         datend = et.strftime('%Y-%m-%dT%H:%M:00')
         datestart += UTC_TZ
         datend += UTC_TZ
+        print(datestart)
+        print(datend)
         # extract attendees
 
         print(utt)
@@ -157,14 +159,15 @@ class RegSkill(MycroftSkill):
                       "focus-corporation.com_@resource.calendar.google.com",
                       "focus-corporation.com_@resource.calendar.google.com",
                       "focus-corporation.com_@resource.calendar.google.com"]
-        indiceroom =None
+        indiceroom = None
         for j, e in enumerate(namerooms):
             if e == location:
-                indiceroom=j
-        if(indiceroom != None):
-            #register the room mail
+                indiceroom = j
+        print (indiceroom)
+        if (indiceroom != None):
+            # register the room mail
             idmailr = emailrooms[indiceroom]
-            #freebusy
+            # freebusy
             # freebusy
             body = {
                 "timeMin": datestart,
@@ -180,11 +183,11 @@ class RegSkill(MycroftSkill):
                 statut = cal_dict[cal_name]
                 for i in statut:
                     if (i == 'busy' and statut[i] == []):
-                        self.speak_dialog("roomfree",data={"room":location})
+                        self.speak_dialog("roomfree", data={"room": location})
                         # ajouter l'email de x ala liste des attendee
                         attendee.append(idmailr)
                     elif (i == 'busy' and statut[i] != []):
-                        self.speak_dialog("roombusy",data={"room":location})
+                        self.speak_dialog("roombusy", data={"room": location})
         else:
             self.speak_dialog("notRoom")
 
