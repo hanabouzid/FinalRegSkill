@@ -200,6 +200,7 @@ class RegSkill(MycroftSkill):
             names = person.get('names', [])
             nameliste.append(names[0].get('displayName'))
         #recherche des mails des invités
+        n=len(listp)
         for i in listp:
             indiceperson=None
             for j, e in enumerate(nameliste):
@@ -231,9 +232,11 @@ class RegSkill(MycroftSkill):
                             attendee.append(idmailp)
                         elif (i == 'busy' and statut[i] != []):
                             self.speak_dialog("attendeebusy",data={"att":att})
+                            n-=1
             else:
                 self.speak_dialog("notExist")
             # creation d'un evenement
+
         attendeess = []
         for i in range(len(attendee)):
             email = {'email': attendee[i]}
@@ -262,9 +265,20 @@ class RegSkill(MycroftSkill):
                 ],
             },
         }
-        event = service.events().insert(calendarId='primary', sendNotifications=True,body=event).execute()
-        print('Event created: %s' % (event.get('htmlLink')))
-        self.speak_dialog("eventCreated")
+        if n == 0:
+            self.speak_dialog("cancellEvent")
+        elif n == len(listp):
+            event = service.events().insert(calendarId='primary', sendNotifications=True,body=event).execute()
+            print('Event created: %s' % (event.get('htmlLink')))
+            self.speak_dialog("eventCreated")
+        else :
+            res=self.get_response('Some of the attendees are busy would you like to continue creating the event yes or no?')
+            if res == 'yes':
+                event = service.events().insert(calendarId='primary', sendNotifications=True, body=event).execute()
+                print('Event created: %s' % (event.get('htmlLink')))
+                self.speak_dialog("eventCreated")
+            elif res == 'no':
+                self.speak_dialog("eventCancelled")
 
 def create_skill():
     return RegSkill()
