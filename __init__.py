@@ -120,7 +120,7 @@ class RegSkill(MycroftSkill):
         #location = message.data.get("Location", None)
         print(utt)
         lister = utt.split(" in ")
-        lister2 = lister[1].split("starts")
+        lister2 = lister[1].split(" starts ")
         location = lister2[0]
         print(location)
         strtdate = lister2[1]
