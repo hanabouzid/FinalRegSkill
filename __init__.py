@@ -118,11 +118,12 @@ class RegSkill(MycroftSkill):
         utt = message.data.get("utterance", None)
         # extract the location
         #location = message.data.get("Location", None)
-        lister=utt.split(" in ")
-        lister2=lister[1].split("starts")
-        location=lister2[0]
+        print(utt)
+        lister = utt.split(" in ")
+        lister2 = lister[1].split("starts")
+        location = lister2[0]
         print(location)
-        strtdate=lister2[1]
+        strtdate = lister2[1]
         st = extract_datetime(strtdate)
         st = st[0] - self.utc_offset
         et = st + timedelta(hours=1)
@@ -132,9 +133,6 @@ class RegSkill(MycroftSkill):
         datend += UTC_TZ
         print(datestart)
         print(datend)
-        # extract attendees
-
-        print(utt)
         listp=[]
         list1 = utt.split("with ")
         list2 = list1[1].split(" in")
@@ -145,29 +143,16 @@ class RegSkill(MycroftSkill):
         print(listp)
         #extraire l'email des invitees et de la salle
         attendee = []
-        namerooms = ['midoune room', 'aiguilles room', 'barrouta room', 'kantaoui room', 'gorges room', 'ichkeul room',
-                     'khemir room', 'tamaghza room', 'friguia room', 'ksour room', 'medeina room', 'thyna room']
-        emailrooms = ["focus-corporation.com_3436373433373035363932@resource.calendar.google.com",
-                      "focus-corporation.com_3132323634363237333835@resource.calendar.google.com",
-                      "focus-corporation.com_3335353934333838383834@resource.calendar.google.com",
-                      "focus-corporation.com_3335343331353831343533@resource.calendar.google.com",
-                      "focus-corporation.com_3436383331343336343130@resource.calendar.google.com",
-                      "focus-corporation.com_36323631393136363531@resource.calendar.google.com",
-                      "focus-corporation.com_3935343631343936373336@resource.calendar.google.com",
-                      "focus-corporation.com_3739333735323735393039@resource.calendar.google.com",
-                      "focus-corporation.com_3132343934363632383933@resource.calendar.google.com",
-                      "focus-corporation.com_@resource.calendar.google.com",
-                      "focus-corporation.com_@resource.calendar.google.com",
-                      "focus-corporation.com_@resource.calendar.google.com"]
-        indiceroom = None
+        namerooms = ['midoune room','aiguilles room','barrouta room','kantaoui room','gorges room','ichkeul room','khemir room','tamaghza room','friguia room','ksour room','medeina room','thyna room']
+        emailrooms = ["focus-corporation.com_3436373433373035363932@resource.calendar.google.com","focus-corporation.com_3132323634363237333835@resource.calendar.google.com","focus-corporation.com_3335353934333838383834@resource.calendar.google.com","focus-corporation.com_3335343331353831343533@resource.calendar.google.com","focus-corporation.com_3436383331343336343130@resource.calendar.google.com","focus-corporation.com_36323631393136363531@resource.calendar.google.com","focus-corporation.com_3935343631343936373336@resource.calendar.google.com","focus-corporation.com_3739333735323735393039@resource.calendar.google.com","focus-corporation.com_3132343934363632383933@resource.calendar.google.com","focus-corporation.com_@resource.calendar.google.com","focus-corporation.com_@resource.calendar.google.com","focus-corporation.com_@resource.calendar.google.com"]
+        indiceroom =None
         for j, e in enumerate(namerooms):
             if e == location:
-                indiceroom = j
-        print (indiceroom)
-        if (indiceroom != None):
-            # register the room mail
+                indiceroom=j
+        if(indiceroom != None):
+            #register the room mail
             idmailr = emailrooms[indiceroom]
-            # freebusy
+            #freebusy
             # freebusy
             body = {
                 "timeMin": datestart,
@@ -183,11 +168,11 @@ class RegSkill(MycroftSkill):
                 statut = cal_dict[cal_name]
                 for i in statut:
                     if (i == 'busy' and statut[i] == []):
-                        self.speak_dialog("roomfree", data={"room": location})
+                        self.speak_dialog("roomfree",data={"room":location})
                         # ajouter l'email de x ala liste des attendee
                         attendee.append(idmailr)
                     elif (i == 'busy' and statut[i] != []):
-                        self.speak_dialog("roombusy", data={"room": location})
+                        self.speak_dialog("roombusy",data={"room":location})
         else:
             self.speak_dialog("notRoom")
 
@@ -200,7 +185,7 @@ class RegSkill(MycroftSkill):
             names = person.get('names', [])
             nameliste.append(names[0].get('displayName'))
         #recherche des mails des invités
-        n=len(listp)
+        n = len(listp)
         for i in listp:
             indiceperson=None
             for j, e in enumerate(nameliste):
@@ -232,11 +217,10 @@ class RegSkill(MycroftSkill):
                             attendee.append(idmailp)
                         elif (i == 'busy' and statut[i] != []):
                             self.speak_dialog("attendeebusy",data={"att":att})
-                            n-=1
+                            n -= 1
             else:
                 self.speak_dialog("notExist")
             # creation d'un evenement
-
         attendeess = []
         for i in range(len(attendee)):
             email = {'email': attendee[i]}
@@ -279,6 +263,5 @@ class RegSkill(MycroftSkill):
                 self.speak_dialog("eventCreated")
             elif res == 'no':
                 self.speak_dialog("eventCancelled")
-
 def create_skill():
     return RegSkill()
