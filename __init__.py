@@ -141,10 +141,34 @@ class RegSkill(MycroftSkill):
         else:
             listp.append(list2[0])
         print(listp)
-        #extraire l'email des invitees et de la salle
+
+
         attendee = []
         namerooms = ['midoune room','aiguilles room','barrouta room','kantaoui room','gorges room','ichkeul room','khemir room','tamaghza room','friguia room','ksour room','medeina room','thyna room']
         emailrooms = ["focus-corporation.com_3436373433373035363932@resource.calendar.google.com","focus-corporation.com_3132323634363237333835@resource.calendar.google.com","focus-corporation.com_3335353934333838383834@resource.calendar.google.com","focus-corporation.com_3335343331353831343533@resource.calendar.google.com","focus-corporation.com_3436383331343336343130@resource.calendar.google.com","focus-corporation.com_36323631393136363531@resource.calendar.google.com","focus-corporation.com_3935343631343936373336@resource.calendar.google.com","focus-corporation.com_3739333735323735393039@resource.calendar.google.com","focus-corporation.com_3132343934363632383933@resource.calendar.google.com","focus-corporation.com_@resource.calendar.google.com","focus-corporation.com_@resource.calendar.google.com","focus-corporation.com_@resource.calendar.google.com"]
+        #freerooms
+        freemails = []
+        freerooms = []
+        for i in range(0, len(emailrooms)):
+            body = {
+                "timeMin": datestart,
+                "timeMax": datend,
+                "timeZone": 'America/Los_Angeles',
+                "items": [{"id": emailrooms[i]}]
+            }
+            roomResult = service.freebusy().query(body=body).execute()
+            room_dict = roomResult[u'calendars']
+            for cal_room in room_dict:
+                print(cal_room, ':', room_dict[cal_room])
+                case = room_dict[cal_room]
+                for j in case:
+                    if (j == 'busy' and case[j] == []):
+                        # la liste freerooms va prendre  les noms des salles free
+                        freerooms.append(namerooms[i])
+                        freemails.append(emailrooms[i])
+        suggroom=freerooms[0]
+        suggmail=freemails[0]
+        # extraire l'email des invitees et de la salle
         indiceroom =None
         for j, e in enumerate(namerooms):
             if e == location:
@@ -170,9 +194,27 @@ class RegSkill(MycroftSkill):
                     if (i == 'busy' and statut[i] == []):
                         self.speak_dialog("roomfree",data={"room":location})
                         # ajouter l'email de x ala liste des attendee
+                        meetroom=location
                         attendee.append(idmailr)
                     elif (i == 'busy' and statut[i] != []):
                         self.speak_dialog("roombusy",data={"room":location})
+                        self.speek_dialog("suggestionroom",data={"suggr":suggroom})
+                        x = self.get_response("Do you agree making a reservation for this meeting room")
+                        if x=="yes":
+                            meetroom= suggroom
+                            attendee.append(suggmail)
+                        else:
+                            s = ",".join(freerooms)
+                            # print("les salles disponibles a cette date sont", freerooms)
+                            self.speak_dialog("freerooms", data={"s": s})
+                            room = self.get_response('which Room do you want to make a reservation for??')
+                            for i in range(0, len(freerooms)):
+                                if (freerooms[i] == room):
+                                    # ajouter l'email de room dans la liste des attendees
+                                    meetroom=room
+                                    attendee.append(freemails[i])
+
+
         else:
             self.speak_dialog("notRoom")
 
@@ -227,7 +269,7 @@ class RegSkill(MycroftSkill):
             attendeess.append(email)
         event = {
             'summary':'meeting',
-            'location': location,
+            'location': meetroom,
             'description': '',
             'start': {
                 'dateTime': datestart,
