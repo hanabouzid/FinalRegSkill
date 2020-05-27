@@ -46,7 +46,7 @@ class RegSkill(MycroftSkill):
     def utc_offset(self):
         return timedelta(seconds=self.location['timezone']['offset'] / 1000)
 
-    @intent_handler(IntentBuilder("add_event_intent").require('Add').require('Event').require('Person').optionally('Location').optionally('time').build())
+    @intent_handler(IntentBuilder("add_event_intent").require('Add').require('Event').require('Person').optionally('Location').require('time').build())
     def createevent(self,message):
         #AUTHORIZE
         creds = None
@@ -116,6 +116,7 @@ class RegSkill(MycroftSkill):
         connections = results.get('connections', [])
         print("connections:", connections)
         utt = message.data.get("utterance", None)
+
         # extract the location
         #location = message.data.get("Location", None)
         print(utt)
@@ -134,8 +135,12 @@ class RegSkill(MycroftSkill):
         print(datestart)
         print(datend)
         listp=[]
-        list1 = utt.split("with ")
-        list2 = list1[1].split(" in")
+        list1 = utt.split(" with ")
+        # extract event name
+        list3=list1[0].split(" named ")
+        title=list3[1]
+        #extract attendees
+        list2 = list1[1].split(" in ")
         if ("and") in list2[0]:
             listp = list2[0].split(" and ")
         else:
@@ -217,6 +222,7 @@ class RegSkill(MycroftSkill):
 
         else:
             self.speak_dialog("notRoom")
+            meetroom="Focus corporation"
 
         # liste de contacts
         nameliste = []
@@ -262,13 +268,14 @@ class RegSkill(MycroftSkill):
                             n -= 1
             else:
                 self.speak_dialog("notExist")
+
             # creation d'un evenement
         attendeess = []
         for i in range(len(attendee)):
             email = {'email': attendee[i]}
             attendeess.append(email)
         event = {
-            'summary':'meeting',
+            'summary':title,
             'location': meetroom,
             'description': '',
             'start': {
