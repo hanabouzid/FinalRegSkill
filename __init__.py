@@ -120,9 +120,9 @@ class RegSkill(MycroftSkill):
         # extract the location
         #location = message.data.get("Location", None)
         print(utt)
-        listname1=utt.split(" named ")
-        listname2=listname1[1].split(" with ")
-        title =listname2[0]
+        #listname1=utt.split(" named ")
+        #listname2=listname1[1].split(" with ")
+        #title =listname2[0]
         lister = utt.split(" in ")
         lister2 = lister[1].split(" starts ")
         location = lister2[0]
@@ -276,7 +276,7 @@ class RegSkill(MycroftSkill):
             email = {'email': attendee[i]}
             attendeess.append(email)
         event = {
-            'summary':title,
+            'summary':'meeting',
             'location': meetroom,
             'description': '',
             'start': {
