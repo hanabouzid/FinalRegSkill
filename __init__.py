@@ -120,6 +120,9 @@ class RegSkill(MycroftSkill):
         # extract the location
         #location = message.data.get("Location", None)
         print(utt)
+        listname1=utt.split(" named ")
+        listname2=listname1[1].split(" with ")
+        title =listname2[0]
         lister = utt.split(" in ")
         lister2 = lister[1].split(" starts ")
         location = lister2[0]
@@ -136,9 +139,7 @@ class RegSkill(MycroftSkill):
         print(datend)
         listp=[]
         list1 = utt.split(" with ")
-        # extract event name
-        list3=list1[0].split(" named ")
-        title=list3[1]
+
         #extract attendees
         list2 = list1[1].split(" in ")
         if ("and") in list2[0]:
