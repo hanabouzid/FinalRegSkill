@@ -1,1 +1,1 @@
-(named)(?P<Event>.*)
+(?:named(?P<Event>.*))
