@@ -46,7 +46,7 @@ class RegSkill(MycroftSkill):
     def utc_offset(self):
         return timedelta(seconds=self.location['timezone']['offset'] / 1000)
 
-    @intent_handler(IntentBuilder("add_event_intent").require('Add').require('Add').require('Person').optionally('Location').optionally('time').build())
+    @intent_handler(IntentBuilder("add_event_intent").require('Add').require('Event').require('Person').optionally('Location').optionally('time').build())
     def createevent(self,message):
         #AUTHORIZE
         creds = None
@@ -204,7 +204,7 @@ class RegSkill(MycroftSkill):
                         attendee.append(idmailr)
                     elif (i == 'busy' and statut[i] != []):
                         self.speak_dialog("roombusy",data={"room":location})
-                        self.speek_dialog("suggestionroom",data={"suggr":suggroom})
+                        self.speak_dialog("suggestionroom",data={"suggroom":suggroom})
                         x = self.get_response("Do you agree making a reservation for this meeting room")
                         if x=="yes":
                             meetroom= suggroom

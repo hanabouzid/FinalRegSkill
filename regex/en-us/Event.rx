@@ -1,1 +1,1 @@
-(?P<Event>.+)
+(an|a)(?P<Event>.*)
