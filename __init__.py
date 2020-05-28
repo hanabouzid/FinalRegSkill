@@ -46,7 +46,7 @@ class RegSkill(MycroftSkill):
     def utc_offset(self):
         return timedelta(seconds=self.location['timezone']['offset'] / 1000)
 
-    @intent_handler(IntentBuilder("add_event_intent").require('Add').require('Event').require('Person').optionally('Location').optionally('time').build())
+    @intent_handler(IntentBuilder("add_event_intent").require('Add').require('Person').optionally('Location').optionally('time').build())
     def createevent(self,message):
         #AUTHORIZE
         creds = None
