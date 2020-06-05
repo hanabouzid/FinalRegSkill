@@ -26,7 +26,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 FLOW = OAuth2WebServerFlow(
     client_id='73558912455-smu6u0uha6c2t56n2sigrp76imm2p35j.apps.googleusercontent.com',
     client_secret='0X_IKOiJbLIU_E5gN3NefNns',
-    scope='https://www.googleapis.com/auth/contacts.readonly',
+    scope=['https://www.googleapis.com/auth/calendar','https://www.googleapis.com/auth/contacts.readonly'],
     user_agent='Smart assistant box')
 # TODO: Change "Template" to a unique name for your skill
 class RegSkill(MycroftSkill):
@@ -48,64 +48,19 @@ class RegSkill(MycroftSkill):
 
     @intent_handler(IntentBuilder("add_event_intent").require('Add').require('Person').optionally('Location').optionally('time').build())
     def createevent(self,message):
-        #AUTHORIZE
-        creds = None
-        # The file token.pickle stores the user's access and refresh tokens, and is
-        # created automatically when the authorization flow completes for the first
-        # time.
-        if os.path.exists('token.pickle'):
-            with open('token.pickle', 'rb') as token:
-                creds = pickle.load(token)
-        # If there are no (valid) credentials available, let the user log in.
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    '/opt/mycroft/skills/regskill.hanabouzid/client_secret.json', SCOPES)
-                creds = flow.run_local_server(port=0)
-                # Save the credentials for the next run
-            with open('token.pickle', 'wb') as token:
-                pickle.dump(creds, token)
-
-        service = build('calendar', 'v3', credentials=creds)
-
-        # Call the Calendar API
-        now = datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-        print('Getting the upcoming 10 events')
-        events_result = service.events().list(calendarId='primary', timeMin=now,
-                                              maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute()
-        events = events_result.get('items', [])
-
-        if not events:
-            print('No upcoming events found.')
-        for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            print(start, event['summary'])
-
-            # Refer to the Python quickstart on how to setup the environment:
-            # https://developers.google.com/calendar/quickstart/python
-            # Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
-            # stored credentials.
-        # If the Credentials don't exist or are invalid, run through the
-        # installed application flow. The Storage object will ensure that,
-        # if successful, the good Credentials will get written back to a
-        # file.
-        storage = Storage('info.dat')
-        credentials = storage.get()
+        storage1 = Storage('/opt/mycroft/skills/finalregskill.hanabouzid/info3.dat')
+        credentials = storage1.get()
         if credentials is None or credentials.invalid == True:
-            credentials = tools.run_flow(FLOW, storage)
-
+            credentials = tools.run_flow(FLOW, storage1)
+        print(credentials)
         # Create an httplib2.Http object to handle our HTTP requests and
         # authorize it with our good Credentials.
         http = httplib2.Http()
         http = credentials.authorize(http)
-
-        # Build a service object for interacting with the API. To get an API key for
-        # your application, visit the Google API Console
-        # and look at your application's credentials page.
+        service = build('calendar', 'v3', http=http)
         people_service = build(serviceName='people', version='v1', http=http)
+        print("authorized")
+        
         # To get the person information for any Google Account, use the following code:
         # profile = people_service.people().get('people/me', pageSize=100, personFields='names,emailAddresses').execute()
         # To get a list of people in the user's contacts,
