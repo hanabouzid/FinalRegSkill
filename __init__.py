@@ -197,7 +197,7 @@ class RegSkill(MycroftSkill):
                     att=i
                     indiceperson=j
             if(indiceperson!=None):
-                self.speak_dialog("exist")
+                self.speak_dialog("exist",data={"att":att})
                 idmailp=adsmails[indiceperson]
                 print(idmailp)
                 print(att)
@@ -223,7 +223,7 @@ class RegSkill(MycroftSkill):
                             self.speak_dialog("attendeebusy",data={"att":att})
                             n -= 1
             else:
-                self.speak_dialog("notExist")
+                self.speak_dialog("notExist",data={"att":att})
 
             # creation d'un evenement
         attendeess = []
